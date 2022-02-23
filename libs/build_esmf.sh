@@ -30,11 +30,15 @@ if $MODULES; then
   module try-load zlib
   module try-load szip
   [[ -z $mpi ]] || module load hpc-$HPC_MPI
-  module load hdf5
+  [[ -z $mpi ]] && modpath=compiler || modpath=mpi
+  module restore hpc-$modpath-hdf5 
+  module is-loaded hdf5 || module load hdf5 
   if [[ ! -z $mpi ]]; then
     [[ $enable_pnetcdf =~ [yYtT] ]] && module load pnetcdf
   fi
-  module load netcdf
+  [[ -z $mpi ]] && modpath=compiler || modpath=mpi
+  module restore hpc-$modpath-netcdf 
+  module is-loaded netcdf || module load netcdf
   module try-load udunits
   module list
   set -x
@@ -48,7 +52,7 @@ if $MODULES; then
 else
   prefix=${ESMF_ROOT:-"/usr/local"}
 fi
-
+#
 if [[ ! -z $mpi ]]; then
   export FC=$MPI_FC
   export CC=$MPI_CC
@@ -70,14 +74,14 @@ URL="https://github.com/esmf-org/esmf"
 cd ${HPC_STACK_ROOT}/${PKGDIR:-"pkg"}
 
 software="ESMF_$version"
-
+#
 [[ -d $software ]] || ( git clone -b $software $URL $software )
 [[ ${DOWNLOAD_ONLY} =~ [yYtT] ]] && exit 0
 [[ -d $software ]] && cd $software || ( echo "$software does not exist, ABORT!"; exit 1 )
 
 # ESMF does not support out of source builds; clean out the clone
 git reset --hard $software && git clean -fx
-
+#
 export ESMF_DIR=$PWD
 
 # This is going to need a little work to adapt for various combinations
@@ -177,3 +181,6 @@ $SUDO make install
 [[ -z $mpi ]] && modpath=compiler || modpath=mpi
 $MODULES && update_modules $modpath $name $version_install
 echo $name $version_install $URL >> ${HPC_STACK_ROOT}/hpc-stack-contents.log
+# Save module environment
+module load $name/$version
+module save hpc-$modpath-esmf

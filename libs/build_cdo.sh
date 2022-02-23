@@ -41,8 +41,8 @@ if $MODULES; then
   [[ -z $mpi ]] || module load hpc-$HPC_MPI
   module try-load zlib
   module try-load szip
-  module load hdf5
-  module load netcdf
+  module try-load hdf5
+  module try-load netcdf
   module try-load udunits
   module list
   set -x

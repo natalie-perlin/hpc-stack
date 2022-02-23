@@ -15,8 +15,10 @@ if $MODULES; then
   source $MODULESHOME/init/bash
   module load hpc-$HPC_COMPILER
   module load hpc-$HPC_MPI
-  module try-load cmake
+  [[ -z $mpi ]] && modpath=compiler || modpath=mpi
+  module is-loaded cmake || module try-load cmake 
   module load netcdf
+  module restore hpc-$modpath-netcdf 
   module list
   set -x
 
@@ -64,3 +66,4 @@ VERBOSE=$MAKE_VERBOSE $SUDO make install
 # generate modulefile from template
 $MODULES && update_modules mpi $name $version
 echo $name $version $URL >> ${HPC_STACK_ROOT}/hpc-stack-contents.log
+

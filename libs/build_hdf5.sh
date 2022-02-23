@@ -20,6 +20,8 @@ if $MODULES; then
   [[ -z $mpi ]] || module load hpc-$HPC_MPI
   [[ $enable_szip =~ [yYtT] ]] && module try-load szip
   [[ $enable_zlib =~ [yYtT] ]] && module try-load zlib
+  [[ -z $mpi ]] && modpath=compiler || modpath=mpi
+  module save hpc-$modpath-zlib 
   module list
   set -x
 
@@ -79,3 +81,8 @@ VERBOSE=$MAKE_VERBOSE make -j${NTHREADS:-4}
 [[ -z $mpi ]] && modpath=compiler || modpath=mpi
 $MODULES && update_modules $modpath $name $version
 echo $name $version $URL >> ${HPC_STACK_ROOT}/hpc-stack-contents.log
+# Cheyenne: save the module built to the hpc-hdf5 collection
+if $MODULES; then
+  module load $name/$version
+  module save hpc-$modpath-hdf5
+fi

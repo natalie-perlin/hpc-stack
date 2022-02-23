@@ -15,14 +15,12 @@ if $MODULES; then
   set +x
   source $MODULESHOME/init/bash
   module load hpc-$HPC_COMPILER
+  module is-loaded cmake || module try-load cmake
   module try-load sqlite
   module try-load tiff
-  module try-load cmake/3.22.0
   module list
   set -x
 
-  module display sqlite
-  
   prefix="${PREFIX:-"/opt/modules"}/$compiler/$name/$version"
   if [[ -d $prefix ]]; then
     [[ $OVERWRITE =~ [yYtT] ]] && ( echo "WARNING: $prefix EXISTS: OVERWRITING!"; $SUDO rm -rf $prefix; $SUDO mkdir $prefix ) \
@@ -54,18 +52,12 @@ CMAKE_OPTS=${STACK_proj_cmake_opts:-""}
 
 [[ $MAKE_CHECK =~ [yYtT] ]] || CMAKE_OPTS+=" -DBUILD_TESTING=OFF"
 
-if [[ -n ${TIFF_ROOT:-} ]] ; then
-  export TIFF_LIBRARY=${TIFF_ROOT}/lib64/libtiff.so
-  export TIFF_INCLUDE_DIR=${TIFF_ROOT}/include
-
-  CMAKE_OPTS+=" -DTIFF_INCLUDE_DIR=${TIFF_INCLUDE_DIR} "
-  CMAKE_OPTS+=" -DTIFF_LIBRARY=${TIFF_LIBRARY} "
+if [[ -n ${TIFF_ROOT-} ]] ; then
+  CMAKE_OPTS+=" -DTIFF_INCLUDE_DIR=${TIFF_ROOT}/include "
+  [[ -f ${TIFF_ROOT}/lib64/libtiff.so ]] && CMAKE_OPTS+=" -DTIFF_LIBRARY=${TIFF_ROOT}/lib64/libtiff.so " || CMAKE_OPTS+=" -DTIFF_LIBRARY=${TIFF_ROOT}/lib/libtiff.so "
 fi
 
-if [[ -n ${SQLITE_ROOT:-} ]] ; then
-  echo "SQLITE_ROOT3 = ${SQLITE_ROOT-:} "
-#  CMAKE_OPTS+=" -DSQLITE3_ROOT=${SQLITE_ROOT-:} "
-#  CMAKE_OPTS+=" -DSQLITE3_PATH=${SQLITE_ROOT}:${SQLITE_ROOT}/bin"
+if [[ -n ${SQLITE_ROOT-} ]] ; then
   CMAKE_OPTS+=" -DSQLITE3_INCLUDE_DIR=${SQLITE_ROOT}/include "
   CMAKE_OPTS+=" -DSQLITE3_LIBRARY=${SQLITE_ROOT}/lib/libsqlite3.so "
 fi

@@ -23,8 +23,10 @@ if $MODULES; then
     module load hpc-$HPC_COMPILER
     [[ -z $mpi ]] || module load hpc-$HPC_MPI
     module try-load szip
-    module load hdf5
-    module load netcdf
+    [[ -z $mpi ]] && modpath=compiler || modpath=mpi
+    module restore hpc-$modpath-netcdf 
+    module is-loaded hdf5 || module load hdf5 
+    module is-loaded netcd || module load netcdf
     module list
     set -x
     enable_pnetcdf=$(nc-config --has-pnetcdf)

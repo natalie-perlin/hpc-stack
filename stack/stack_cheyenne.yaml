@@ -38,7 +38,7 @@ udunits:
 
 hdf5:
   build: YES
-  version: 1.10.6
+  version: 1.10.8
   shared: YES
   enable_szip: NO
   enable_zlib: YES
@@ -52,7 +52,7 @@ netcdf:
   build: YES
   shared: YES
   enable_pnetcdf: NO
-  version_c: 4.7.4
+  version_c: 4.8.1
   version_f: 4.5.3
   version_cxx: 4.3.1
   disable_cxx: YES
@@ -66,7 +66,7 @@ nco:
   version: 4.9.3
 
 cdo:
-  build: YES
+  build: NO 
   version: 1.9.8
 
 pio:
@@ -183,8 +183,8 @@ g2tmpl:
 
 crtm:
   build: YES
-  version: v2.3.0
-  install_as: 2.3.0
+  version: v2.4.0
+  install_as: 2.4.0
   is_nceplib: YES
   install_fix: NO
 

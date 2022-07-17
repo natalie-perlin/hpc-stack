@@ -134,6 +134,7 @@ $MODULES || { [[ ${STACK_mpi_build:-} =~ [yYtT] ]] && export PATH="$PREFIX/bin:$
 # this can be done in each script individually
 # it might warrant a --force flag to force rebuild when desired
 build_lib cmake
+build_lib miniconda3
 build_lib udunits
 build_lib jpeg
 build_lib zlib
@@ -203,8 +204,7 @@ build_lib nceppost
 build_lib upp
 build_lib wrf_io
 
-# Python and associate virtual environments
-build_lib miniconda3
+# Python/conda virtual environments
 build_lib r2d2
 build_lib regional_workflow
 

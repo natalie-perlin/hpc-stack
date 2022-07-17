@@ -26,10 +26,6 @@ if $MODULES; then
   set +x
   source $MODULESHOME/init/bash
   module load hpc-$HPC_PYTHON
-  if [[ -n "${STACK_miniconda3_version:-} " ]]; then
-    module is-loaded python  && module unload python
-    module load miniconda3/${STACK_miniconda3_version:-}
-  fi
   module list
   set -x
   prefix="${PREFIX:-"/opt/modules"}/$python/$name/$version"

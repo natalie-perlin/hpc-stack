@@ -10,7 +10,7 @@ export GNU=${GNU:-}
 # Compiler/MPI combination
 export HPC_COMPILER="gnu/10.3.0"
 export HPC_MPI="openmpi/4.1.2"
-export HPC_PYTHON="python/3.8.9"
+export HPC_PYTHON="miniconda3/4.12.0"
 
 # Build options
 export USE_SUDO=N
